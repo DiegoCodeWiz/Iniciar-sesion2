@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Sistema Seguro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-navy: #1e3799; 
+            --dark-blue: #2d3436;
+            --bg-canvas: #f4f7f9;
+            --border-color: #edf2f7;
+        }
+
+        body {
+            background-color: var(--bg-canvas);
+            font-family: 'Inter', sans-serif;
+            color: var(--dark-blue);
+            /* Animación de entrada suave */
+            animation: fadeInPage 0.6s ease-out;
+        }
+
+        @keyframes fadeInPage {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Navbar Profesional */
+        .navbar {
+            background: white;
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.8rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary-navy);
+            display: flex;
+            align-items: center;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-dot {
+            height: 6px;
+            width: 6px;
+            background-color: var(--primary-navy);
+            border-radius: 50%;
+            display: inline-block;
+            margin-left: 4px;
+        }
+
+        /* Encabezado */
+        .page-header {
+            margin: 50px 0;
+        }
+
+        .user-avatar-circle {
+            width: 70px;
+            height: 70px;
+            background: #f1f3f9;
+            color: var(--primary-navy);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 20px;
+            border: 2px solid white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        /* Tarjetas (Boxes) */
+        .info-box {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .info-box:hover {
+            border-color: var(--primary-navy);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+        }
+
+        .label-sm {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #94a3b8;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .data-value {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--dark-blue);
+        }
+
+        /* Menú de Acciones */
+        .action-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .action-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 14px;
+            margin-bottom: 6px;
+            border-radius: 8px;
+            color: #64748b;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .action-item i {
+            margin-right: 12px;
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+            color: #94a3b8;
+        }
+
+        .action-item:hover {
+            background-color: #f1f5f9;
+            color: var(--primary-navy);
+        }
+
+        .action-item:hover i {
+            color: var(--primary-navy);
+        }
+
+        .btn-logout-minimal {
+            color: #e11d48;
+            margin-top: 15px;
+            border-top: 1px solid #f1f5f9;
+            padding-top: 20px;
+            border-radius: 0;
+        }
+
+        .btn-logout-minimal:hover {
+            background: #fff1f2;
+            color: #be123c;
+        }
+
+        footer {
+            border-top: 1px solid var(--border-color);
+            margin-top: 60px;
+        }
+
+        /* ===== SISTEMA DE NOTIFICACIONES (NUEVO) ===== */
+        .notification-toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-left: 5px solid var(--primary-navy);
+            max-width: 350px;
+            z-index: 9999;
+            transform: translateX(120%);
+            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .notification-toast.show {
+            transform: translateX(0);
+        }
+
+        .notification-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .notification-icon {
+            width: 50px;
+            height: 50px;
+            background: #f1f5f9;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .notification-icon i {
+            font-size: 1.4rem;
+            color: var(--primary-navy);
+        }
+
+        .notification-text h5 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--dark-blue);
+            margin-bottom: 5px;
+        }
+
+        .notification-text p {
+            font-size: 0.85rem;
+            color: #64748b;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+
+        .notification-progress {
+            height: 4px;
+            background: #e2e8f0;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .notification-progress-bar {
+            height: 100%;
+            background: var(--primary-navy);
+            width: 100%;
+            animation: progressBar 5s linear forwards;
+        }
+
+        @keyframes progressBar {
+            from { width: 100%; }
+            to { width: 0%; }
+        }
+
+        .close-notification {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 5px;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        .close-notification:hover {
+            background: #f1f5f9;
+            color: var(--dark-blue);
+        }
+
+        /* Modal de función no disponible */
+        .feature-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9998;
+            justify-content: center;
+            align-items: center;
+            animation: fadeInOverlay 0.3s ease;
+        }
+
+        .feature-modal.show {
+            display: flex;
+        }
+
+        @keyframes fadeInOverlay {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            animation: slideUpModal 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border: 1px solid var(--border-color);
+        }
+
+        @keyframes slideUpModal {
+            from { transform: translateY(30px) scale(0.95); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
+        }
+
+        .modal-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+        }
+
+        .modal-icon i {
+            font-size: 2.5rem;
+            color: var(--primary-navy);
+        }
+
+        .modal-content h4 {
+            font-weight: 700;
+            color: var(--dark-blue);
+            margin-bottom: 15px;
+        }
+
+        .modal-content p {
+            color: #64748b;
+            line-height: 1.5;
+            margin-bottom: 25px;
+        }
+
+        .btn-modal-close {
+            background: var(--primary-navy);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-modal-close:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        /* Mini confeti */
+        .confetti-piece {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: var(--primary-navy);
+            border-radius: 50%;
+            opacity: 0;
+            z-index: 9997;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Notificación Toast (oculta inicialmente) -->
+    <div class="notification-toast" id="notificationToast">
+        <button class="close-notification" id="closeNotification">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="notification-content">
+            <div class="notification-icon">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="notification-text">
+                <h5>Función en desarrollo</h5>
+                <p id="notificationMessage">Estamos trabajando en esta función. ¡Pronto estará disponible!</p>
+            </div>
+        </div>
+        <div class="notification-progress">
+            <div class="notification-progress-bar"></div>
+        </div>
+    </div>
+
+    <!-- Modal de función no disponible -->
+    <div class="feature-modal" id="featureModal">
+        <div class="modal-content">
+            <div class="modal-icon">
+                <i class="fas fa-tools"></i>
+            </div>
+            <h4 id="modalTitle">Funci��n en desarrollo</h4>
+            <p id="modalMessage">Estamos trabajando arduamente para traerte esta funcionalidad. ¡Pronto estará disponible!</p>
+            <button class="btn-modal-close" id="closeModal">Entendido</button>
+        </div>
+    </div>
+
+    <nav class="navbar">
+        <div class="container d-flex justify-content-between">
+            <a class="navbar-brand" href="#">
+                CONTROL PANEL <span class="brand-dot"></span>
+            </a>
+            <div class="d-flex align-items-center">
+                <span class="badge bg-light text-dark border me-2" style="font-weight: 500;">Online</span>
+                <i class="fas fa-circle text-success" style="font-size: 8px;"></i>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header text-center d-flex flex-column align-items-center">
+            <div class="user-avatar-circle">
+                <i class="fas fa-user-tie"></i>
+            </div>
+            <h2 class="fw-bold">Hola, {{ nombre }}</h2>
+            <p class="text-muted small">Bienvenido de nuevo a tu panel de gestión.</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="info-box">
+                            <div class="label-sm">Perfil de Usuario</div>
+                            <div class="data-value">{{ nombre }}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-box">
+                            <div class="label-sm">Estado de Cuenta</div>
+                            <div class="data-value text-success">Verificada</div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="info-box d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="label-sm">Seguridad del Sistema</div>
+                                <div class="data-value">Protección Biométrica y SQL activa</div>
+                            </div>
+                            <i class="fas fa-shield-alt fa-2x" style="color: #cbd5e1;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="info-box">
+                    <div class="label-sm mb-3">Menú Principal</div>
+                    
+                    <nav class="action-list">
+                        <a href="#" class="action-item" data-feature="mis-datos">
+                            <i class="fas fa-address-card"></i> Mis Datos
+                        </a>
+                        <a href="#" class="action-item" data-feature="privacidad">
+                            <i class="fas fa-shield-check"></i> Privacidad
+                        </a>
+                        <a href="#" class="action-item" data-feature="notificaciones">
+                            <i class="fas fa-bell"></i> Notificaciones
+                        </a>
+                        
+                        <a href="{{ url_for('logout') }}" class="action-item btn-logout-minimal">
+                            <i class="fas fa-power-off"></i> Finalizar Sesión
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <footer class="py-4 text-center text-muted small">
+            &copy; 2026 Plataforma Corporativa &bull; Todos los derechos reservados
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Mensajes personalizados para cada función
+        const featureMessages = {
+            'mis-datos': {
+                title: '📋 Mis Datos',
+                message: 'Estamos trabajando en un sistema seguro y organizado para que puedas gestionar toda tu información personal en un solo lugar. ¡Pronto estará disponible!',
+                icon: 'fas fa-address-card'
+            },
+            'privacidad': {
+                title: '🔒 Privacidad',
+                message: 'Tu seguridad es nuestra prioridad. Pronto podrás configurar todos los aspectos de privacidad y seguridad de tu cuenta.',
+                icon: 'fas fa-shield-check'
+            },
+            'notificaciones': {
+                title: '🔔 Notificaciones',
+                message: 'Estamos creando un sistema inteligente de notificaciones para que nunca te pierdas lo importante. ¡Muy pronto estará disponible!',
+                icon: 'fas fa-bell'
+            }
+        };
+
+        // Elementos DOM
+        const actionItems = document.querySelectorAll('.action-item[data-feature]');
+        const notificationToast = document.getElementById('notificationToast');
+        const notificationMessage = document.getElementById('notificationMessage');
+        const closeNotification = document.getElementById('closeNotification');
+        const featureModal = document.getElementById('featureModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalMessage = document.getElementById('modalMessage');
+        const closeModal = document.getElementById('closeModal');
+
+        // Función para mostrar notificación toast
+        function showNotification(message) {
+            notificationMessage.textContent = message;
+            notificationToast.classList.add('show');
+            
+            // Auto-ocultar después de 5 segundos
+            setTimeout(() => {
+                hideNotification();
+            }, 5000);
+            
+            // Reiniciar animación de la barra de progreso
+            const progressBar = notificationToast.querySelector('.notification-progress-bar');
+            progressBar.style.animation = 'none';
+            setTimeout(() => {
+                progressBar.style.animation = 'progressBar 5s linear forwards';
+            }, 10);
+        }
+
+        // Función para ocultar notificación
+        function hideNotification() {
+            notificationToast.classList.remove('show');
+        }
+
+        // Función para mostrar modal
+        function showModal(title, message) {
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            featureModal.classList.add('show');
+            document.body.style.overflow = 'hidden'; // Prevenir scroll
+        }
+
+        // Función para ocultar modal
+        function hideModal() {
+            featureModal.classList.remove('show');
+            document.body.style.overflow = ''; // Restaurar scroll
+        }
+
+        // Función para crear efecto de confeti
+        function createConfetti() {
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti-piece';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.top = '-10px';
+                    confetti.style.background = `hsl(${Math.random() * 360}, 70%, 60%)`;
+                    document.body.appendChild(confetti);
+                    
+                    // Animación
+                    const animation = confetti.animate([
+                        { top: '-10px', opacity: 1, transform: 'scale(1)' },
+                        { top: '100vh', opacity: 0, transform: 'scale(0.5)' }
+                    ], {
+                        duration: Math.random() * 2000 + 1000,
+                        easing: 'cubic-bezier(0.215, 0.610, 0.355, 1)'
+                    });
+                    
+                    // Remover después de la animación
+                    animation.onfinish = () => {
+                        confetti.remove();
+                    };
+                }, i * 100);
+            }
+        }
+
+        // Event listeners para los items del menú
+        actionItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const feature = this.dataset.feature;
+                const featureData = featureMessages[feature];
+                
+                // Mostrar notificación toast
+                showNotification(featureData.message);
+                
+                // Mostrar modal después de un breve retraso
+                setTimeout(() => {
+                    showModal(featureData.title, featureData.message);
+                }, 300);
+                
+                // Efecto de confeti
+                createConfetti();
+                
+                // Efecto visual en el item clickeado
+                this.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 200);
+            });
+        });
+
+        // Cerrar notificación
+        closeNotification.addEventListener('click', hideNotification);
+
+        // Cerrar modal
+        closeModal.addEventListener('click', hideModal);
+
+        // Cerrar modal haciendo clic fuera
+        featureModal.addEventListener('click', function(e) {
+            if (e.target === featureModal) {
+                hideModal();
+            }
+        });
+
+        // Cerrar modal con ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && featureModal.classList.contains('show')) {
+                hideModal();
+            }
+        });
+
+        // Mostrar notificación de bienvenida al cargar la página
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                showNotification('¡Bienvenido a tu panel de control! Explora las funciones disponibles.');
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
